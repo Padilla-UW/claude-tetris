@@ -47,6 +47,10 @@ jobs:
                - Si falta información clave para poder actuar sobre el issue, pídela
                  explícitamente en el comentario.
 
+               Redacta el comentario en Markdown válido para GitHub (encabezados con `##`,
+               listas con `-`, código entre backticks o bloques ```) para que se muestre
+               bien formateado en la interfaz de GitHub.
+
                No hagas cambios de código ni abras un PR: esta acción es solo de análisis y
                triage.
 

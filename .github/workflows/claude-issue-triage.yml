@@ -1,0 +1,58 @@
+name: Claude Issue Triage
+
+on:
+  issues:
+    types: [opened, edited, reopened]
+
+jobs:
+  triage:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      issues: write
+      id-token: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Run Claude Issue Triage
+        id: claude-triage
+        uses: anthropics/claude-code-action@v1
+        with:
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+
+          prompt: |
+            Analiza el issue #${{ github.event.issue.number }} de este repositorio (título y
+            descripción) y realiza dos cosas:
+
+            1. Etiquetado: revisa las labels existentes en el repositorio con
+               `gh label list` y asigna al issue las que correspondan según su contenido
+               (por ejemplo: bug, enhancement, documentation, question, duplicate, invalid,
+               wontfix, good first issue, help wanted, accessibility). Usa únicamente labels
+               que ya existan en el repositorio, no crees labels nuevas. Aplica los cambios
+               con `gh issue edit ${{ github.event.issue.number }} --add-label "..."`. Si el
+               issue ya tiene labels que ya no aplican dado el contenido actual, quítalas con
+               `--remove-label`. Si ninguna label existente encaja bien, no asignes ninguna.
+
+            2. Diagnóstico: publica un comentario en el issue (con
+               `gh issue comment ${{ github.event.issue.number }} --body "..."`) que incluya:
+               - Un resumen breve de lo que se está reportando o solicitando.
+               - Un diagnóstico general: posible causa si es un bug, alcance estimado si es
+                 una mejora, o qué información falta si el issue no es lo bastante claro.
+               - Si es un bug reproducible, en qué parte del código (`index.html`, `style.css`
+                 o `game.js`) probablemente esté relacionado, basándote en el comportamiento
+                 descrito.
+               - Si falta información clave para poder actuar sobre el issue, pídela
+                 explícitamente en el comentario.
+
+               No hagas cambios de código ni abras un PR: esta acción es solo de análisis y
+               triage.
+
+          claude_args: |
+            --allowedTools "Bash(gh label list:*),Bash(gh issue edit:*),Bash(gh issue comment:*),Bash(gh issue view:*)"
+
+          # Optional: allow Claude to read Actions results if useful for diagnosis
+          # additional_permissions: |
+          #   actions: read

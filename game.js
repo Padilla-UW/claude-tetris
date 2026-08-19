@@ -477,6 +477,7 @@ function applyTheme(theme) {
     btn.classList.toggle('active', btn.dataset.theme === theme);
   });
   if (board) draw();
+  if (next) drawNext();
 }
 
 themeButtons.forEach(btn => {
@@ -551,6 +552,12 @@ function populateStartLevelSelect() {
 
 startLevelSelect.addEventListener('change', e => {
   selectedStartLevel = Number(e.target.value);
+  if (board && !gameOver) {
+    level = selectedStartLevel;
+    runStartLevel = selectedStartLevel - Math.floor(lines / 10);
+    dropInterval = Math.max(100, 1000 - (level - 1) * 90);
+    updateHUD();
+  }
 });
 
 populateStartLevelSelect();

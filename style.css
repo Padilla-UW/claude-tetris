@@ -185,22 +185,6 @@ kbd {
   display: none;
 }
 
-#pause-controls ul {
-  list-style: none;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  align-self: flex-start;
-}
-
-#pause-controls li {
-  font-size: 12px;
-  color: #888;
-  display: flex;
-  align-items: center;
-  gap: 4px;
-}
-
 #resume-btn,
 #pause-restart-btn,
 #show-controls-btn,

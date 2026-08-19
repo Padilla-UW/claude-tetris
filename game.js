@@ -67,9 +67,19 @@ const startLeaderboard = document.getElementById('start-leaderboard');
 const startBtn = document.getElementById('start-btn');
 const resetRecordsBtn = document.getElementById('reset-records-btn');
 const themeButtons = document.querySelectorAll('.theme-btn');
+const pauseMenu = document.getElementById('pause-menu');
+const pauseMain = document.getElementById('pause-main');
+const pauseControls = document.getElementById('pause-controls');
+const resumeBtn = document.getElementById('resume-btn');
+const pauseRestartBtn = document.getElementById('pause-restart-btn');
+const showControlsBtn = document.getElementById('show-controls-btn');
+const backToPauseBtn = document.getElementById('back-to-pause-btn');
+const startLevelSelect = document.getElementById('start-level-select');
 
 let board, current, next, score, lines, level, paused, gameOver, lastTime, dropAccum, dropInterval, animId;
 let comboCount = 0, sessionBestCombo = 0;
+let selectedStartLevel = 1;
+let runStartLevel = 1;
 
 function readStoredTheme() {
   try {
@@ -154,7 +164,7 @@ function clearLines() {
   if (cleared) {
     lines += cleared;
     score += (LINE_SCORES[cleared] || 0) * level;
-    level = Math.floor(lines / 10) + 1;
+    level = runStartLevel + Math.floor(lines / 10);
     dropInterval = Math.max(100, 1000 - (level - 1) * 90);
     updateHUD();
   }
@@ -382,13 +392,14 @@ function togglePause() {
   if (gameOver) return;
   paused = !paused;
   if (!paused) {
+    pauseMenu.classList.add('hidden');
     lastTime = performance.now();
     loop(lastTime);
   } else {
     cancelAnimationFrame(animId);
-    overlayTitle.textContent = 'PAUSA';
-    overlayScore.textContent = '';
-    overlay.classList.remove('hidden');
+    pauseMain.classList.remove('hidden');
+    pauseControls.classList.add('hidden');
+    pauseMenu.classList.remove('hidden');
   }
 }
 
@@ -414,10 +425,11 @@ function init() {
   board = createBoard();
   score = 0;
   lines = 0;
-  level = 1;
+  level = selectedStartLevel;
+  runStartLevel = selectedStartLevel;
   paused = false;
   gameOver = false;
-  dropInterval = 1000;
+  dropInterval = Math.max(100, 1000 - (level - 1) * 90);
   dropAccum = 0;
   comboCount = 0;
   sessionBestCombo = 0;
@@ -432,7 +444,7 @@ function init() {
 
 document.addEventListener('keydown', e => {
   if (!board) return;
-  if (e.code === 'KeyP') { togglePause(); return; }
+  if (e.code === 'KeyP' || e.code === 'Escape') { togglePause(); return; }
   if (paused || gameOver) return;
   switch (e.code) {
     case 'ArrowLeft':
@@ -513,7 +525,35 @@ resetRecordsBtn.addEventListener('click', () => {
   renderLeaderboard(startLeaderboard);
 });
 
+resumeBtn.addEventListener('click', togglePause);
+pauseRestartBtn.addEventListener('click', () => {
+  pauseMenu.classList.add('hidden');
+  init();
+});
+showControlsBtn.addEventListener('click', () => {
+  pauseMain.classList.add('hidden');
+  pauseControls.classList.remove('hidden');
+});
+backToPauseBtn.addEventListener('click', () => {
+  pauseControls.classList.add('hidden');
+  pauseMain.classList.remove('hidden');
+});
+
+function populateStartLevelSelect() {
+  for (let lvl = 1; lvl <= 10; lvl++) {
+    const option = document.createElement('option');
+    option.value = lvl;
+    option.textContent = lvl;
+    if (lvl === selectedStartLevel) option.selected = true;
+    startLevelSelect.appendChild(option);
+  }
+}
+
+startLevelSelect.addEventListener('change', e => {
+  selectedStartLevel = Number(e.target.value);
+});
+
+populateStartLevelSelect();
 applyTheme(currentTheme);
 renderLeaderboard(startLeaderboard);
 startScreen.classList.remove('hidden');
-

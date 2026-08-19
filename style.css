@@ -160,3 +160,103 @@ kbd {
 #restart-btn:hover {
   background: #9bbdff;
 }
+
+/* ---- Theme picker ---- */
+.theme-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.theme-btn {
+  background: #22223a;
+  border: 1px solid #3a3a5a;
+  border-radius: 4px;
+  padding: 5px 8px;
+  font-size: 11px;
+  font-family: inherit;
+  color: #aaa;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+
+.theme-btn:hover {
+  background: #2a2a4a;
+  color: #ddd;
+}
+
+.theme-btn.active {
+  background: #7aa2f7;
+  color: #0f0f17;
+  border-color: #7aa2f7;
+  font-weight: 700;
+}
+
+/* ---- Theme: Neon ---- */
+body[data-theme="neon"] {
+  background: #05050a;
+}
+
+body[data-theme="neon"] #board,
+body[data-theme="neon"] #next-canvas {
+  background: #030308;
+  border-color: #3a3a6a;
+  box-shadow: 0 0 30px rgba(122, 162, 247, 0.45), 0 0 60px rgba(186, 104, 200, 0.2);
+}
+
+body[data-theme="neon"] .theme-btn.active {
+  box-shadow: 0 0 10px rgba(122, 162, 247, 0.8);
+}
+
+/* ---- Theme: Pastel ---- */
+body[data-theme="pastel"] {
+  background: #f3edf7;
+  color: #5a5a6e;
+}
+
+body[data-theme="pastel"] #board,
+body[data-theme="pastel"] #next-canvas {
+  background: #fdfaff;
+  border-color: #d8c8e0;
+  box-shadow: 0 0 20px rgba(182, 138, 208, 0.25);
+}
+
+body[data-theme="pastel"] .game-title {
+  color: #b68ad0;
+  text-shadow: none;
+}
+
+body[data-theme="pastel"] .label {
+  color: #9a8aa8;
+}
+
+body[data-theme="pastel"] .value {
+  color: #b68ad0;
+}
+
+body[data-theme="pastel"] kbd {
+  background: #ece0f2;
+  border-color: #d8c8e0;
+  color: #7a7a8e;
+}
+
+body[data-theme="pastel"] .controls li {
+  color: #8a8a9e;
+}
+
+body[data-theme="pastel"] .theme-btn {
+  background: #ece0f2;
+  border-color: #d8c8e0;
+  color: #7a7a8e;
+}
+
+body[data-theme="pastel"] .theme-btn:hover {
+  background: #e0d0ea;
+  color: #5a5a6e;
+}
+
+body[data-theme="pastel"] .theme-btn.active {
+  background: #b68ad0;
+  border-color: #b68ad0;
+  color: #fdfaff;
+}
